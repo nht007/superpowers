@@ -58,7 +58,7 @@ independently testable deliverable.
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** Execute this plan task-by-task using the execution lane selected below. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -68,6 +68,10 @@ independently testable deliverable.
 
 **Spec:** [path to the spec/design doc this plan implements — the plan
 argues from the spec, so the spec travels with it; executors read both]
+
+**Execution Lane:** [Inline execution, lightweight delegation, or full
+subagent-driven development] — [why this is the least-ceremonial lane
+that preserves correctness]
 
 ## Global Constraints
 
@@ -152,20 +156,37 @@ If you find issues, fix them inline. No need to re-review — just fix and move 
 
 ## Execution Handoff
 
-After saving the plan, offer execution choice:
+Select the least-ceremonial execution lane that preserves correctness,
+record it in the plan header, and present that selection as part of the
+implementation approval:
 
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
+- **Inline execution** when delegation provides no meaningful speed,
+  cost, context, or isolation benefit.
+- **Lightweight delegation** for one to three bounded, mechanical tasks
+  with clear scope. The coordinating agent reviews the diff and runs the
+  final verification.
+- **Full subagent-driven development** only for multiple substantial,
+  independently reviewable tasks or when the user explicitly requests
+  it. Invoke `superpowers:subagent-driven-development` for this lane.
 
-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
+The plan is a durable execution record, not the ordinary approval
+surface. After saving and self-reviewing it, give the user a concise,
+decision-complete chat handoff with all seven headings below. Keep each
+entry brief; when a heading has no current item, write "none identified"
+rather than dropping it:
 
-**2. Inline Execution** - Execute tasks in this session using executing-plans, batch execution with checkpoints
+- **Scope / exclusions:** what implementation changes and what remains out
+  of scope
+- **Decisions / trade-offs:** the important choices and their main cost
+- **Maintained surfaces:** what is added, reused, and removed
+- **Execution lane:** the selected lane and why it fits
+- **Verification / checkpoints:** automated checks and any live gates
+- **Risks / dependencies:** material residual risk and external needs
+- **Authorization requested:** the exact actions approval permits
 
-**Which approach?"**
-
-**If Subagent-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
-- Fresh subagent per task + two-stage review
-
-**If Inline Execution chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
-- Batch execution with checkpoints for review
+Pause for explicit implementation approval after that summary. Request
+review of the plan document itself only when its precise content or
+wording is the approval subject. If planning reveals a new design
+decision or maintained surface beyond the approved design, return to
+brainstorming and present that addition before seeking implementation
+approval.
