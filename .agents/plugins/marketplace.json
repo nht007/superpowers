@@ -1,7 +1,7 @@
 {
-  "name": "superpowers-dev",
+  "name": "nela-superpowers",
   "interface": {
-    "displayName": "Superpowers Dev"
+    "displayName": "Nela Superpowers"
   },
   "plugins": [
     {
