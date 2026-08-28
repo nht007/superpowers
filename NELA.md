@@ -18,7 +18,7 @@ boundaries. After self-review, the agent presents a concise decision-complete ch
 scope, trade-offs, maintained surfaces, execution lane, verification, risks, dependencies, and the
 actions authorized by approval. Implementation waits for approval of that handoff.
 
-Brainstorming is text- and chat-based. The fork has no visual-companion runtime or test surface.
+Brainstorming uses the ordinary chat surface for questions, design sections, and approvals.
 
 The remaining Superpowers skills retain their upstream behavior unless this file and the repository
 history name a current Nela delta.
@@ -100,7 +100,7 @@ An accepted release proves:
 - both marketplace manifests use `nela-superpowers` and expose one `superpowers` plugin;
 - all registered manifests carry the same fork version;
 - `UPSTREAM.json` resolves to the recorded upstream tag and commit;
-- the Codex package contains all retained skills, no Claude hook, and no visual-companion files;
+- the Codex package contains all retained skills and excludes the Claude hook;
 - the Claude root contains its SessionStart hook and all retained skills;
 - both harnesses follow the design-to-plan approval contract; and
 - each live installation exposes exactly one Superpowers namespace.
