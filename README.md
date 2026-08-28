@@ -271,7 +271,7 @@ turn loses the bootstrap — start a fresh session if skills stop triggering.
 
 6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
 
-7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
+7. **finishing-a-development-branch** - Activates when tasks complete. Verifies completed work, applies personal or collaborative repository policy, publishes through the selected policy, and safely cleans owned worktrees.
 
 **The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
 
@@ -302,7 +302,7 @@ Superpowers is built by [Jesse Vincent](https://blog.fsck.com) and the rest of t
 - **requesting-code-review** - Pre-review checklist
 - **receiving-code-review** - Responding to feedback
 - **using-git-worktrees** - Parallel development branches
-- **finishing-a-development-branch** - Merge/PR decision workflow
+- **finishing-a-development-branch** - Verifies completed work, applies personal or collaborative repository policy, publishes through the selected policy, and safely cleans owned worktrees.
 - **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
 
 **Meta**

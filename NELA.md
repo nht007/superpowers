@@ -20,6 +20,12 @@ actions authorized by approval. Implementation waits for approval of that handof
 
 Brainstorming uses the ordinary chat surface for questions, design sections, and approvals.
 
+Completed personal work automatically proceeds through outcome-owned integration, publication,
+remote-ref verification, and safe cleanup. Collaborative work follows the repository's required
+review policy, and unclear repository classification produces one focused personal/solo-or-
+collaborative question. The generic merge, pull-request, or keep-branch options menu is deliberately
+not part of the Nela workflow.
+
 The remaining Superpowers skills retain their upstream behavior unless this file and the repository
 history name a current Nela delta.
 
@@ -41,9 +47,10 @@ Candidate work uses a `tn/` branch and an isolated worktree. Before publication:
 1. Run the repository contract, manifest, packaging, hook, version, lint, and unaffected-skill tests.
 2. Install the local marketplace into a permission-restricted temporary `CODEX_HOME` and confirm it
    is the only Superpowers plugin in that home.
-3. Exercise the complete design-to-plan behavior in a fresh ephemeral Codex session.
-4. Push only the candidate branch and run the same behavior through work-Mac Claude with
-   `--plugin-dir` and no second Superpowers plugin active.
+3. Exercise every maintained workflow delta in fresh ephemeral Codex sessions, including the
+   design-to-plan path and personal and collaborative finishing, then run an unchanged-skill smoke.
+4. Push only the candidate branch and run the same maintained-delta and unchanged-skill checks
+   through work-Mac Claude with `--plugin-dir` and no second Superpowers plugin active.
 
 Fork `main` and the release tag advance only after both harnesses accept the same candidate commit.
 
@@ -102,7 +109,7 @@ An accepted release proves:
 - `UPSTREAM.json` resolves to the recorded upstream tag and commit;
 - the Codex package contains all retained skills and excludes the Claude hook;
 - the Claude root contains its SessionStart hook and all retained skills;
-- both harnesses follow the design-to-plan approval contract; and
+- both harnesses follow every maintained workflow contract and pass an unchanged-skill smoke; and
 - each live installation exposes exactly one Superpowers namespace.
 
 ## Rollback
