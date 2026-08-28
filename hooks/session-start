@@ -23,6 +23,139 @@ escape_for_json() {
     printf '%s' "$s"
 }
 
+claude_fork_release_reminder() {
+    local manifest="$PLUGIN_ROOT/.claude-plugin/plugin.json"
+    local cache_dir cache_file installed_version cached_version remote_json remote_version fetched
+
+    command -v node >/dev/null 2>&1 || return 0
+    [[ -n "${HOME:-}" ]] || return 0
+
+    cache_dir="$HOME/.cache/nela-superpowers"
+    cache_file="$cache_dir/claude-fork-version.json"
+    mkdir -p "$cache_dir" 2>/dev/null || return 0
+    [[ -d "$cache_dir" && -w "$cache_dir" ]] || return 0
+
+    installed_version="$(node -e '
+const fs = require("fs");
+const version = JSON.parse(fs.readFileSync(process.argv[1], "utf8")).version;
+if (typeof version !== "string" || !/^\d+\.\d+\.\d+-nela\.\d+$/.test(version)) {
+  process.exit(1);
+}
+process.stdout.write(version);
+' "$manifest" 2>/dev/null)" || return 0
+
+    cached_version="$(node -e '
+const fs = require("fs");
+const file = process.argv[1];
+const stat = fs.statSync(file);
+if (Date.now() - stat.mtimeMs >= 24 * 60 * 60 * 1000) {
+  process.exit(1);
+}
+const cache = JSON.parse(fs.readFileSync(file, "utf8"));
+if (typeof cache.mainVersion !== "string" || !/^\d+\.\d+\.\d+-nela\.\d+$/.test(cache.mainVersion)) {
+  process.exit(1);
+}
+process.stdout.write(cache.mainVersion);
+' "$cache_file" 2>/dev/null)" || cached_version=""
+
+    fetched=0
+    if [[ -n "$cached_version" ]]; then
+        remote_version="$cached_version"
+    else
+        command -v curl >/dev/null 2>&1 || return 0
+        remote_json="$(curl --fail --silent --show-error --location --max-time 2 \
+            "https://raw.githubusercontent.com/nht007/superpowers/main/.claude-plugin/plugin.json" \
+            2>/dev/null)" || return 0
+        remote_version="$(printf '%s' "$remote_json" | node -e '
+let input = "";
+process.stdin.setEncoding("utf8");
+process.stdin.on("data", chunk => { input += chunk; });
+process.stdin.on("end", () => {
+  const version = JSON.parse(input).version;
+  if (typeof version !== "string" || !/^\d+\.\d+\.\d+-nela\.\d+$/.test(version)) {
+    process.exit(1);
+  }
+  process.stdout.write(version);
+});
+' 2>/dev/null)" || return 0
+        fetched=1
+    fi
+
+    node -e '
+const fs = require("fs");
+const [file, installedVersion, mainVersion, fetchedValue] = process.argv.slice(1);
+const versionPattern = /^(\d+)\.(\d+)\.(\d+)-nela\.(\d+)$/;
+
+function versionParts(version) {
+  const match = versionPattern.exec(version);
+  return match && match.slice(1).map(Number);
+}
+
+function compareVersions(left, right) {
+  const leftParts = versionParts(left);
+  const rightParts = versionParts(right);
+  if (!leftParts || !rightParts) {
+    throw new Error("unsupported fork version");
+  }
+  for (let index = 0; index < leftParts.length; index += 1) {
+    if (leftParts[index] !== rightParts[index]) {
+      return leftParts[index] > rightParts[index] ? 1 : -1;
+    }
+  }
+  return 0;
+}
+
+let cache = {};
+try {
+  const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
+  if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+    cache = parsed;
+  }
+} catch (_) {
+  cache = {};
+}
+
+let shouldWrite = fetchedValue === "1";
+if (shouldWrite) {
+  cache.mainVersion = mainVersion;
+}
+
+const now = Math.floor(Date.now() / 1000);
+const reminderExpired = !Number.isFinite(cache.remindedAt) ||
+  now - cache.remindedAt >= 7 * 24 * 60 * 60;
+const shouldRemind = compareVersions(mainVersion, installedVersion) > 0 &&
+  (cache.remindedVersion !== mainVersion || reminderExpired);
+
+if (shouldRemind) {
+  cache.remindedVersion = mainVersion;
+  cache.remindedAt = now;
+  shouldWrite = true;
+}
+
+if (shouldWrite) {
+  const temporary = `${file}.tmp-${process.pid}-${Math.random().toString(16).slice(2)}`;
+  try {
+    fs.writeFileSync(temporary, `${JSON.stringify(cache)}\n`, { flag: "wx", mode: 0o600 });
+    fs.renameSync(temporary, file);
+  } catch (error) {
+    try {
+      fs.unlinkSync(temporary);
+    } catch (_) {
+      // The optional cache may not have reached the filesystem.
+    }
+    process.exit(1);
+  }
+}
+
+if (shouldRemind) {
+  process.stdout.write(
+    `Nela Superpowers ${mainVersion} is a tested Nela fork release available for work-Mac deployment. ` +
+    "This update is not automatic; follow NELA.md to review and deploy it."
+  );
+}
+' "$cache_file" "$installed_version" "$remote_version" "$fetched" 2>/dev/null || return 0
+}
+
 using_superpowers_escaped=$(escape_for_json "$using_superpowers_content")
 session_context="<EXTREMELY_IMPORTANT>\nYou have superpowers.\n\n**Below is the full content of your 'superpowers:using-superpowers' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_superpowers_escaped}\n</EXTREMELY_IMPORTANT>"
 
@@ -40,6 +173,11 @@ if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
   printf '{\n  "additional_context": "%s"\n}\n' "$session_context" | cat
 elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
   # Claude Code sets CLAUDE_PLUGIN_ROOT without COPILOT_CLI
+  fork_release_reminder="$(claude_fork_release_reminder 2>/dev/null || true)"
+  if [[ -n "$fork_release_reminder" ]]; then
+    fork_release_reminder_escaped="$(escape_for_json "$fork_release_reminder")"
+    session_context="${session_context}\n\n${fork_release_reminder_escaped}"
+  fi
   printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context" | cat
 else
   # Copilot CLI (sets COPILOT_CLI=1) or unknown platform — SDK standard format
