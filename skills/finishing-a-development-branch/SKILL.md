@@ -69,6 +69,16 @@ Resolve the completion policy in this order:
 2. closer repository guidance;
 3. durable user-level guidance.
 
+Classify by the policy those sources establish:
+
+- **Personal/solo** requires an explicit personal or solo designation, or standing guidance that
+  identifies this repository or repository class as personal/solo.
+- **Collaborative** requires guidance or task context that establishes external review, a pull or
+  merge request, branch protection, or another shared integration path.
+- **Unclassified** includes guidance that names only Git mechanics such as fast-forwarding, rebasing,
+  squashing, merging onto `main`, branch naming, or a preferred base. Those mechanics choose how an
+  already-classified repository integrates work; they do not authorize publication or cleanup.
+
 If classification remains unclear, ask only:
 
 ```
@@ -220,6 +230,7 @@ protection above, remove only an owned worktree, and force-delete only the named
 | "Tests passed earlier this session" | Run the suite on the exact candidate and again on the integrated base. |
 | "I can see the commits, so they are mine to publish" | Visibility does not prove current-outcome ownership. Inspect the range and stop on ambiguity. |
 | "Personal work still needs a merge-or-PR question" | Known personal policy selects verified integration and publication without a redundant menu. |
+| "Guidance says fast-forward onto main, so this is personal" | Integration mechanics do not classify a repository or authorize publication. Ask the focused classification question. |
 | "The push was rejected, so I should force it" | Remote movement is a stop condition. Investigate; never force-push without explicit authorization. |
 | "The push command succeeded, so publication is proven" | Compare the exact local and remote refs before cleanup. |
 | "The PR is up, so the worktree is clutter" | Collaborative worktrees remain for review feedback. |
