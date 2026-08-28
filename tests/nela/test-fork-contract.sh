@@ -132,16 +132,22 @@ if version_registry is not None:
             continue
         observed_versions[f"{relative_path}:{field}"] = str(value)
 
-expected_version = f"{expected_upstream['tag'].removeprefix('v')}-nela.1"
-for location, version in observed_versions.items():
-    if version != expected_version:
-        errors.append(f"{location} is {version!r}, expected {expected_version!r}")
+expected_version = observed_versions.get(".codex-plugin/plugin.json:version")
+if expected_version is None:
+    errors.append("version registry does not define .codex-plugin/plugin.json:version")
+else:
+    for location, version in observed_versions.items():
+        if version != expected_version:
+            errors.append(f"{location} is {version!r}, expected {expected_version!r}")
 
-if observed_versions:
-    plugin_version = observed_versions.get(".codex-plugin/plugin.json:version", "")
-    match = re.fullmatch(r"(\d+\.\d+\.\d+)-nela\.(\d+)", plugin_version)
+    match = re.fullmatch(r"(\d+\.\d+\.\d+)-nela\.(\d+)", expected_version)
     if match is None:
-        errors.append(f"Codex plugin version is not an upstream-derived Nela version: {plugin_version!r}")
+        errors.append(
+            "Codex plugin version is not an upstream-derived Nela version: "
+            f"{expected_version!r}"
+        )
+    elif int(match.group(2)) < 1:
+        errors.append(f"Codex plugin Nela revision must be at least 1: {expected_version!r}")
     elif upstream is not None and upstream.get("tag") != f"v{match.group(1)}":
         errors.append(
             f"fork version base v{match.group(1)} does not match {upstream.get('tag')!r}"
