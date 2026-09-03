@@ -153,7 +153,8 @@ cmd_check() {
 
 cmd_audit() {
   # First run check
-  cmd_check || true
+  local has_drift=0
+  cmd_check || has_drift=1
   echo ""
 
   # Determine the current version (most common across declared files)
@@ -179,8 +180,8 @@ cmd_audit() {
     exclude_args+=("--exclude=$pattern" "--exclude-dir=$pattern")
   done < <(audit_excludes)
 
-  # Also always exclude binary files and .git
-  exclude_args+=("--exclude-dir=.git" "--exclude-dir=node_modules" "--binary-files=without-match")
+  # Also always exclude repository metadata, linked worktrees, and dependencies
+  exclude_args+=("--exclude-dir=.git" "--exclude-dir=.worktrees" "--exclude-dir=node_modules" "--binary-files=without-match")
 
   # Get list of declared paths for comparison
   local -a declared_paths=()
@@ -221,6 +222,8 @@ cmd_audit() {
     echo "Review the above files — if they should be bumped, add them to .version-bump.json"
     echo "If they should be skipped, add them to the audit.exclude list."
   fi
+
+  return "$((has_drift || found_undeclared))"
 }
 
 cmd_bump() {
