@@ -138,7 +138,55 @@ archive="$TEST_ROOT/superpowers"
 tar_archive="$TEST_ROOT/superpowers.tar.gz"
 extracted="$TEST_ROOT/extracted"
 tar_extracted="$TEST_ROOT/tar-extracted"
+platform_references="$TEST_ROOT/platform-references"
 write_metadata_fixture "$metadata_source"
+
+if reference_output="$(python3 - "$REPO_ROOT/skills/using-superpowers/SKILL.md" 2>&1 <<'PY'
+import re
+import sys
+from pathlib import Path
+
+skill = Path(sys.argv[1]).resolve()
+repo = skill.parents[2]
+text = skill.read_text(encoding="utf-8")
+section_match = re.search(
+    r"^## Platform Adaptation\s*$\n(?P<section>.*?)(?=^## |\Z)",
+    text,
+    flags=re.MULTILINE | re.DOTALL,
+)
+if section_match is None:
+    raise SystemExit("Platform Adaptation section is missing")
+
+section = section_match.group("section")
+harnesses = re.findall(r"^- ([^:\n]+):", section, flags=re.MULTILINE)
+references = re.findall(
+    r"^- ([^:\n]+):\s+\[[^\]\n]+\]\(([^)\n]+)\)\s*$",
+    section,
+    flags=re.MULTILINE,
+)
+if not harnesses:
+    raise SystemExit("Platform Adaptation lists no harnesses")
+if len(references) != len(harnesses):
+    raise SystemExit(
+        "every Platform Adaptation harness must provide a resolvable Markdown link"
+    )
+
+for harness, target in references:
+    resolved = (skill.parent / target).resolve()
+    if not resolved.is_relative_to(skill.parent):
+        raise SystemExit(f"{harness} reference escapes the skill directory: {target}")
+    if not resolved.is_file():
+        raise SystemExit(f"{harness} reference does not resolve: {target}")
+    print(resolved.relative_to(repo))
+PY
+)"; then
+  pass "Platform Adaptation references resolve from the skill directory"
+  printf '%s\n' "$reference_output" >"$platform_references"
+else
+  fail "Platform Adaptation references resolve from the skill directory"
+  printf '%s\n' "$reference_output" | sed 's/^/      /'
+  : >"$platform_references"
+fi
 
 source_hooks="$(python3 -c 'import json; print(json.load(open("'"$REPO_ROOT"'/.codex-plugin/plugin.json")).get("hooks"))')"
 assert_equals "$source_hooks" "{}" "source Codex manifest suppresses local hook auto-discovery"
@@ -170,6 +218,10 @@ assert_contains "$archive_paths" "skills/brainstorming/SKILL.md" "archive includ
 assert_contains "$archive_paths" "skills/brainstorming/agents/openai.yaml" "archive includes OpenAI skill metadata"
 assert_contains "$archive_paths" "assets/app-icon.png" "archive includes app icon"
 assert_contains "$archive_paths" "assets/superpowers-small.svg" "archive includes composer icon"
+while IFS= read -r reference_path; do
+  [[ -n "$reference_path" ]] || continue
+  assert_contains "$archive_paths" "$reference_path" "archive includes listed platform reference $reference_path"
+done <"$platform_references"
 
 manifest_summary="$(read_archive_file "$archive" .codex-plugin/plugin.json | python3 -c 'import json,sys; data=json.load(sys.stdin); print("\t".join([data["name"], data["version"], data["skills"], str(data.get("hooks"))]))')"
 expected_version="$(python3 -c 'import json; print(json.load(open("'"$REPO_ROOT"'/.codex-plugin/plugin.json"))["version"])')"

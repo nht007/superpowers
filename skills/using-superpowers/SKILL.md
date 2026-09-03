@@ -51,12 +51,13 @@ These thoughts mean STOP—you're rationalizing:
 
 ## Platform Adaptation
 
-If your harness appears here, read its reference file for special instructions:
+Read the reference for your harness, resolving its path from the directory that
+contains this `SKILL.md`:
 
-- Codex: `references/codex-tools.md`
-- Pi: `references/pi-tools.md`
-- Antigravity: `references/antigravity-tools.md`
-- Hermes Agent: `references/hermes-tools.md`
+- Codex: [`./references/codex-tools.md`](./references/codex-tools.md)
+- Pi: [`./references/pi-tools.md`](./references/pi-tools.md)
+- Antigravity: [`./references/antigravity-tools.md`](./references/antigravity-tools.md)
+- Hermes Agent: [`./references/hermes-tools.md`](./references/hermes-tools.md)
 
 ## User Instructions
 
