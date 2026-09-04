@@ -1,25 +1,25 @@
 ---
 name: requesting-code-review
-description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements
+description: Use when completed work has substantial behavioral or integration risk, an explicit review gate applies, or independent judgment would materially improve confidence
 ---
 
 # Requesting Code Review
 
-Dispatch a code reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history.
+Dispatch a code reviewer subagent when independent judgment materially reduces the risk of proceeding. The reviewer gets precisely crafted context for evaluation — never your session's history.
 
-**Core principle:** Review early, review often.
+**Core principle:** Scale independent review to risk; keep verification mandatory.
 
 ## When to Request Review
 
-**Mandatory:**
-- After each task in subagent-driven development
-- After completing major feature
-- Before merge to main
+| Change state | Action |
+|--------------|--------|
+| The active workflow, repository policy, or your human partner requires independent review | Request review |
+| The change affects security, privacy, credentials, data integrity, migrations, concurrency, externally consumed contracts, or multiple integrated systems | Request review |
+| A substantial feature, refactor, or complex bug fix needs judgment beyond deterministic verification | Request review |
+| A small mechanical, documentation, or configuration change preserves behavior and contracts, the exact diff has been inspected, and focused verification passes | Proceed without independent review |
+| You are stuck or the risk classification remains genuinely uncertain | Request review for a fresh perspective |
 
-**Optional but valuable:**
-- When stuck (fresh perspective)
-- Before refactoring (baseline check)
-- After fixing complex bug
+Re-review only when findings remain unresolved or later edits create a distinct risk. Merge timing alone does not create a review requirement.
 
 ## How to Request
 
@@ -76,13 +76,17 @@ You: [Fix progress indicators]
 
 | Excuse | Reality |
 |--------|---------|
-| "I'll just review the diff myself instead of dispatching a reviewer" | You're the coordinator — reviewing the diff inline burns the context window you need to keep driving the work. Dispatch a reviewer subagent: the diff and the evaluation live in its context, and only the findings come back to you. |
+| "It's about to merge, so it always needs a reviewer" | Merge timing is not a risk signal. Apply the change-state table. |
+| "The tests passed, so this security-sensitive change doesn't need review" | Deterministic checks and independent judgment cover different risks. Request review when a risk trigger applies. |
+| "This tiny change doesn't need verification either" | Independent review and verification are separate gates. Omitting a reviewer never permits omitting fresh, focused verification. |
 | "The reviewer needs my whole session history to understand the change" | Hand it precisely crafted context, never your session's history. That keeps the reviewer on the work product, not your thought process. |
 
 ## Red Flags
 
 **Never:**
-- Skip review because "it's simple"
+- Skip review when the workflow or a listed risk trigger requires it
+- Dispatch a reviewer solely because the change is about to merge
+- Treat proportionate self-inspection as permission to skip verification
 - Ignore Critical issues
 - Proceed with unfixed Important issues
 - Argue with valid technical feedback
