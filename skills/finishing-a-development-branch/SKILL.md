@@ -7,25 +7,23 @@ description: Use when implementation is complete, all tests pass, and the reposi
 
 ## Overview
 
-**Core principle:** Verify tests → prove ownership → apply repository policy → publish → verify the
-remote → clean up owned state.
+**Core principle:** Establish applicable verification → prove ownership → apply repository policy →
+publish → verify the remote → clean up owned state.
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
-## Step 1: Verify Tests
+## Step 1: Inventory Candidate Verification Evidence
 
-Run the project's full relevant test suite on the exact candidate tree (`npm test` / `cargo test` /
-`pytest` / `go test ./...`). A green run earlier in the session proves only the tree it ran on.
+Use `superpowers:verification-before-completion` to identify evidence for the candidate without
+assuming either that an earlier run applies or that it must be repeated. Record:
 
-**If tests fail**, report the failures and stop:
+- the commands or behavioral checks that ran and their observed results;
+- the commit/tree or other state they covered;
+- the relevant toolchain/environment when it matters; and
+- any later content or input change.
 
-```
-Tests failing (<N> failures). Must fix before completing:
-
-[Show failures]
-```
-
-**If tests pass:** continue to Step 2.
+Do not claim the candidate is verified yet. Step 2 captures its current identity and decides whether
+this evidence applies.
 
 ## Step 2: Capture Repository State
 
@@ -37,6 +35,7 @@ GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
 WORKTREE_PATH=$(git rev-parse --show-toplevel)
 BRANCH=$(git branch --show-current)
 HEAD_SHA=$(git rev-parse HEAD)
+HEAD_TREE=$(git rev-parse HEAD^{tree})
 git status --porcelain=v1 -uall
 git remote -v
 ```
@@ -47,6 +46,19 @@ it does not authorize a merge, rebase, force-push, or worktree cleanup.
 Stop if the candidate tree contains uncommitted work whose ownership is unclear. Record whether this
 is a normal repository (`GIT_DIR == GIT_COMMON`), a named-branch linked worktree, or an externally
 managed detached workspace.
+
+Apply the evidence gate to `HEAD_SHA` / `HEAD_TREE` and the captured worktree state:
+
+- If authoritative evidence covers the exact candidate tree and every input material to the claim
+  is unchanged, carry it forward. A turn or session boundary alone does not require another suite.
+- If a bounded content or relevant-input change occurred, run the checks that prove that affected
+  surface.
+- If evidence is missing, ambiguous, or broadly stale, run the full relevant suite (`npm test` /
+  `cargo test` / `pytest` / `go test ./...`).
+- Follow any explicit owner or repository requirement for a new candidate-stage run.
+
+Inspect complete output and stop on every failed required check. Do not integrate a candidate whose
+applicable verification is incomplete.
 
 ## Step 3: Determine Base Branch
 
@@ -91,8 +103,8 @@ completion path without a redundant choice prompt.
 ## Step 5: Complete Personal Work
 
 Personal completion means integrating only the approved current outcome into the base branch,
-testing the integrated result, publishing the base branch, verifying the exact remote ref, and
-cleaning up outcome-owned branch/worktree state.
+establishing applicable verification for the integrated result, publishing the base branch,
+verifying the exact remote ref, and cleaning up outcome-owned branch/worktree state.
 
 Before integration:
 
@@ -119,14 +131,27 @@ fast-forward result; do not create a merge commit unless the repository or human
 one. If integration exposes a behavioral conflict or requires choosing between implementations,
 stop and present that design decision.
 
-Run the full relevant suite again on the integrated base. If it fails, stop and investigate. Leave
-the outcome branch and owned worktree in place; do not push or clean up.
+Capture the integrated content identity:
+
+```bash
+INTEGRATED_TREE=$(git rev-parse HEAD^{tree})
+```
+
+- If `INTEGRATED_TREE == HEAD_TREE`, content-scoped candidate evidence still applies. Run only
+  checks required for a named integration-specific risk, such as branch-sensitive packaging,
+  generated artifacts, migrations, or an explicit post-integration policy.
+- If the trees differ, inspect the exact difference and run verification proportionate to its
+  affected surface. Use the full relevant suite when the difference or risk is broad.
+
+Stop and investigate every failed required check. Leave the outcome branch and owned worktree in
+place; do not push or clean up. Do not rerun the content suite merely because the same tree now has
+the base-branch ref.
 
 ### Direct work on the base branch
 
-Skip branch integration. Still prove which local-ahead commits belong to the current outcome, run the
-fresh suite, push normally, compare the remote ref, and report the clean state. Stop if other local
-commits are mixed into the range.
+Skip branch integration. Still prove which local-ahead commits belong to the current outcome and
+that the Step 2 evidence applies to the current tree, then push normally, compare the remote ref, and
+report the clean state. Stop if other local commits are mixed into the range.
 
 ### Externally managed detached workspace
 
@@ -134,7 +159,7 @@ From the canonical root, integrate only the exact proven outcome commits into th
 the repository's curated-history policy. Leave the detached workspace in place. Stop if the commit
 range, base, or canonical-checkout ownership cannot be proved.
 
-After the merged-result suite passes, publish with a normal push:
+After the integrated result's required verification is satisfied, publish with a normal push:
 
 ```bash
 git push origin <base-branch>
@@ -227,7 +252,10 @@ protection above, remove only an owned worktree, and force-delete only the named
 
 | Excuse | Reality |
 |--------|---------|
-| "Tests passed earlier this session" | Run the suite on the exact candidate and again on the integrated base. |
+| "Tests passed earlier, so they still count" | Prove the current exact tree and every relevant input before carrying evidence forward. |
+| "It is a new session, so both suites must rerun" | Session boundaries do not change content. Reuse applicable evidence after proving identity. |
+| "The same tree moved to main, so rerun everything" | Verify integration-specific risks and refs; do not retest identical content without a named requirement. |
+| "The tree matches, so packaging cannot change" | Branch-sensitive packaging or explicit integration gates still require their targeted checks. |
 | "I can see the commits, so they are mine to publish" | Visibility does not prove current-outcome ownership. Inspect the range and stop on ambiguity. |
 | "Personal work still needs a merge-or-PR question" | Known personal policy selects verified integration and publication without a redundant menu. |
 | "Guidance says fast-forward onto main, so this is personal" | Integration mechanics do not classify a repository or authorize publication. Ask the focused classification question. |
