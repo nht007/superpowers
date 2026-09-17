@@ -26,6 +26,12 @@ review policy, and unclear repository classification produces one focused person
 collaborative question. The generic merge, pull-request, or keep-branch options menu is deliberately
 not part of the Nela workflow.
 
+Completion evidence remains applicable while its subject and every input material to the claim are
+unchanged. Agents prove current identity and cleanliness before carrying earlier evidence across
+turns, sessions, or refs; changed, external, ambiguous, or explicitly gated state receives fresh
+affected verification. Content-identical integration preserves content-scoped evidence while still
+requiring current integration, publication, remote-ref, and named integration-risk checks.
+
 The remaining Superpowers skills retain their upstream behavior unless this file and the repository
 history name a current Nela delta.
 
