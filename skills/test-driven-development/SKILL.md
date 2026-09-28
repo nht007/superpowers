@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Use when your human partner explicitly requests the Superpowers test-driven-development or TDD method, or when systematic-debugging reaches its failing-test step
+description: Use when your human partner explicitly requests the Superpowers test-driven-development or TDD method
 ---
 
 # Test-Driven Development (TDD)

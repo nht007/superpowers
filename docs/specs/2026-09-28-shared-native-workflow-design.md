@@ -23,15 +23,15 @@ design and applicable user and repository instructions.
 The five full execution methods remain installed and discoverable:
 `writing-plans`, `executing-plans`, `test-driven-development`,
 `subagent-driven-development`, and `dispatching-parallel-agents`. Their trigger
-descriptions require an explicit user request for that method in ordinary
-feature development. An agent can still choose ordinary planning, tests, and
-delegation natively; the request condition selects the named Superpowers
-method, not the underlying activity.
+descriptions require an explicit user request for that method. An agent can
+still choose ordinary planning, tests, and delegation natively; the request
+condition selects the named Superpowers method, not the underlying activity.
 When a method is requested, its own workflow applies, subject to higher-priority
 instructions. Situational skills such as debugging, review, worktrees, and
 verification remain available when their actual trigger applies.
-`systematic-debugging` invokes the full TDD method at its failing-test step;
-that root-cause workflow keeps its current testing discipline.
+Bug fixes require a failing reproduction to run before production edits,
+whether or not `systematic-debugging` activates. Full TDD remains available
+on explicit request.
 
 ## Behavior and Boundary
 
@@ -43,12 +43,13 @@ also asks for `writing-plans` or another named execution method, the agent uses
 that method at the appropriate point after the design gate.
 
 For a bug, failing test, or unexpected behavior, the bootstrap invokes
-`systematic-debugging` before investigation or a proposed fix. Its
-failing-test step invokes full TDD. For an explicit request
-to use TDD or subagent-driven development during feature work, the
-corresponding method remains available. The bootstrap does not force every
-possibly relevant skill into the workflow. User and repository requirements
-for tests, reviews, and Git integration remain binding.
+`systematic-debugging` before investigation or a proposed fix. For a bug fix,
+the agent writes and runs a failing reproduction before changing production
+code even if the debugging skill does not activate. For an explicit request
+to use TDD or subagent-driven development, the corresponding method remains
+available. The bootstrap does not force every possibly relevant skill into
+the workflow. User and repository requirements for tests, reviews, and Git
+integration remain binding.
 
 ## Maintained Surfaces
 
@@ -58,7 +59,8 @@ for tests, reviews, and Git integration remain binding.
   current `main`, preserving the published mechanism-level design check.
 - Narrow only the trigger descriptions of the five execution-method skills.
   Their bodies remain intact for users who invoke them.
-- Make `systematic-debugging` explicitly invoke TDD at its failing-test step.
+- Keep `systematic-debugging`'s failing-test step aligned with the bootstrap
+  rule while leaving the full TDD skill request-only.
 - Update `NELA.md` and the existing version manifests for one shared release.
   No new package filter, fork, hook, or parallel implementation is needed.
 
@@ -72,8 +74,9 @@ installation paths remain.
 Establish baseline behavior from the current fork, then evaluate fresh agent
 sessions against the candidate. Cover an ordinary new-feature request, an
 architectural spec handoff, a request for a full execution method, and a
-situational skill trigger. Run the fork's contract, packaging, manifest, hook,
-version, and lint checks. Confirm the Codex package contains all retained
+bug fix with a failing reproduction before production edits. Run the fork's
+contract, packaging, manifest, hook, version, and lint checks. Confirm the
+Codex package contains all retained
 skills and the shared candidate behaves as designed in a fresh Codex session.
 
 Push only the candidate branch for isolated work-Mac Claude validation with

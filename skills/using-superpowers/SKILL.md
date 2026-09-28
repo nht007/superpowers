@@ -29,8 +29,8 @@ verification, and worktree skills, when their specific triggers apply.
 When you encounter a bug, failing test, or unexpected behavior in the work,
 invoke `superpowers:systematic-debugging` before investigating or proposing
 a fix.
-`systematic-debugging` invokes the full `test-driven-development` method
-when it reaches its failing-test step.
+For a bug fix, write and run a failing reproduction before editing production
+code.
 
 Direct user instructions take precedence over skills.
 

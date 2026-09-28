@@ -16,8 +16,9 @@ testing, review, and delegation choices under applicable user and repository ins
 
 The full Superpowers execution methods — writing-plans, executing-plans, test-driven-development,
 subagent-driven-development, and dispatching-parallel-agents — remain installed and activate when
-the owner explicitly requests that method. Situational skills retain their specific triggers;
-systematic-debugging also invokes the full test-driven-development method at its failing-test step.
+the owner explicitly requests that method. Situational skills retain their specific triggers. For
+a bug fix, the agent writes and runs a failing reproduction before editing production code, whether
+or not the debugging skill activates.
 
 Brainstorming uses the ordinary chat surface for questions, design sections, and approvals.
 
@@ -55,8 +56,9 @@ Candidate work uses a `tn/` branch and an isolated worktree. Before publication:
 2. Install the local marketplace into a permission-restricted temporary `CODEX_HOME` and confirm it
    is the only Superpowers plugin in that home.
 3. Exercise every maintained workflow delta in fresh ephemeral Codex sessions, including the
-   design-to-native-implementation path, explicit execution-method requests, and personal and
-   collaborative finishing, then run an unchanged-skill smoke.
+   design-to-native-implementation path, a bug fix with a failing reproduction before production
+   edits, explicit execution-method requests, and personal and collaborative finishing, then run
+   an unchanged-skill smoke.
 4. Push only the candidate branch and run the same maintained-delta and unchanged-skill checks
    through work-Mac Claude with `--plugin-dir` and no second Superpowers plugin active.
 

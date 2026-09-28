@@ -37,7 +37,7 @@ Once it's teased a spec out of the conversation, it shows it to you in chunks sh
 
 After you've signed off on the design, your agent records and self-reviews a specification for architectural work, then implements in the same conversation using its native planning, testing, and review capabilities.
 
-The full Superpowers planning, TDD, and agent-execution methods remain available when you explicitly ask for them. Design guidance and situational skills such as debugging and verification activate when their triggers apply; systematic debugging uses the full TDD method for its failing-test step.
+The full Superpowers planning, TDD, and agent-execution methods remain available when you explicitly ask for them. Design guidance activates for new behavior; situational skills such as debugging and verification remain available when relevant. Bug fixes require a failing reproduction before production edits.
 
 ## Commercial Services
 
@@ -261,7 +261,7 @@ turn loses the bootstrap — start a fresh session if skills stop triggering.
 
 2. **Native implementation** - The host agent chooses an implementation sequence, tests, review, and delegation under the approved design and local instructions.
 
-3. **Requested methods** - Ask explicitly for writing-plans, executing-plans, test-driven-development, subagent-driven-development, or parallel agents when you want that full Superpowers process during ordinary feature development.
+3. **Requested methods** - Ask explicitly for writing-plans, executing-plans, test-driven-development, subagent-driven-development, or parallel agents when you want that full Superpowers process.
 
 4. **Situational skills** - Debugging, review, verification, worktrees, and branch finishing remain available for their specific triggers.
 

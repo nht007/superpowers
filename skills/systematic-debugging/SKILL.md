@@ -173,8 +173,7 @@ You MUST complete each phase before proceeding to the next.
    - Simplest possible reproduction
    - Automated test if possible
    - One-off test script if no framework
-   - MUST have before fixing
-   - **REQUIRED SUB-SKILL:** Invoke `superpowers:test-driven-development` now to write and run the failing test before editing production code
+   - Run it and confirm it fails for the expected reason before editing production code
 
 2. **Implement Single Fix**
    - Address the root cause identified
