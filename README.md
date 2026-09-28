@@ -35,11 +35,9 @@ It starts from the moment you fire up your coding agent. As soon as it sees that
 
 Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest. 
 
-After you've signed off on the design, your agent puts together an implementation plan that's clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY. 
+After you've signed off on the design, your agent records and self-reviews a specification for architectural work, then implements in the same conversation using its native planning, testing, and review capabilities.
 
-Next up, once you say "go", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for your agent to work autonomously for a couple hours at a time without deviating from the plan you put together.
-
-There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers.
+The full Superpowers planning, TDD, and agent-execution methods remain available when you explicitly ask for them. Design guidance and situational skills such as debugging and verification activate when their triggers apply; systematic debugging uses the full TDD method for its failing-test step.
 
 ## Commercial Services
 
@@ -259,21 +257,13 @@ turn loses the bootstrap — start a fresh session if skills stop triggering.
 
 ## The Basic Workflow
 
-1. **brainstorming** - Activates before writing code. Refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves design document.
+1. **brainstorming** - Shapes and approves a new feature, behavior change, or architectural design before implementation. Architectural work gets a self-reviewed specification.
 
-2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
+2. **Native implementation** - The host agent chooses an implementation sequence, tests, review, and delegation under the approved design and local instructions.
 
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
+3. **Requested methods** - Ask explicitly for writing-plans, executing-plans, test-driven-development, subagent-driven-development, or parallel agents when you want that full Superpowers process during ordinary feature development.
 
-4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
-
-5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
-
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
-
-7. **finishing-a-development-branch** - Activates when tasks complete. Verifies completed work, applies personal or collaborative repository policy, publishes through the selected policy, and safely cleans owned worktrees.
-
-**The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
+4. **Situational skills** - Debugging, review, verification, worktrees, and branch finishing remain available for their specific triggers.
 
 ## Community
 
@@ -311,7 +301,7 @@ Superpowers is built by [Jesse Vincent](https://blog.fsck.com) and the rest of t
 
 ## Philosophy
 
-- **Test-Driven Development** - Write tests first, always
+- **Test-Driven Development** - Available as a full method when requested
 - **Systematic over ad-hoc** - Process over guessing
 - **Complexity reduction** - Simplicity as primary goal
 - **Evidence over claims** - Verify before declaring success

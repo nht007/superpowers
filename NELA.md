@@ -11,12 +11,13 @@ for merge compatibility but are not part of the Nela acceptance boundary.
 
 Architectural brainstorming presents the design section by section in chat. Approval of the final
 section approves the design. The agent then writes and self-reviews the specification as a durable
-record and proceeds directly to implementation planning.
+record and continues to implementation in the same conversation, using the host's native planning,
+testing, review, and delegation choices under applicable user and repository instructions.
 
-Implementation plans retain exact files, steps, tests, commands, expected results, and commit
-boundaries. After self-review, the agent presents a concise decision-complete chat handoff covering
-scope, trade-offs, maintained surfaces, execution lane, verification, risks, dependencies, and the
-actions authorized by approval. Implementation waits for approval of that handoff.
+The full Superpowers execution methods — writing-plans, executing-plans, test-driven-development,
+subagent-driven-development, and dispatching-parallel-agents — remain installed and activate when
+the owner explicitly requests that method. Situational skills retain their specific triggers;
+systematic-debugging also invokes the full test-driven-development method at its failing-test step.
 
 Brainstorming uses the ordinary chat surface for questions, design sections, and approvals.
 
@@ -32,8 +33,8 @@ turns, sessions, or refs; changed, external, ambiguous, or explicitly gated stat
 affected verification. Content-identical integration preserves content-scoped evidence while still
 requiring current integration, publication, remote-ref, and named integration-risk checks.
 
-The remaining Superpowers skills retain their upstream behavior unless this file and the repository
-history name a current Nela delta.
+The remaining Superpowers skills retain their upstream behavior when invoked unless this file and
+the repository history name a current Nela delta.
 
 ## Upstream Provenance and Versions
 
@@ -54,7 +55,8 @@ Candidate work uses a `tn/` branch and an isolated worktree. Before publication:
 2. Install the local marketplace into a permission-restricted temporary `CODEX_HOME` and confirm it
    is the only Superpowers plugin in that home.
 3. Exercise every maintained workflow delta in fresh ephemeral Codex sessions, including the
-   design-to-plan path and personal and collaborative finishing, then run an unchanged-skill smoke.
+   design-to-native-implementation path, explicit execution-method requests, and personal and
+   collaborative finishing, then run an unchanged-skill smoke.
 4. Push only the candidate branch and run the same maintained-delta and unchanged-skill checks
    through work-Mac Claude with `--plugin-dir` and no second Superpowers plugin active.
 

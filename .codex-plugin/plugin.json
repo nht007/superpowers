@@ -1,7 +1,7 @@
 {
   "name": "superpowers",
-  "version": "6.3.0-nela.5",
-  "description": "An agentic skills framework & software development methodology that works: planning, TDD, debugging, and collaboration workflows.",
+  "version": "6.3.0-nela.7",
+  "description": "Design-first skills with native implementation and optional planning, TDD, debugging, and collaboration methods.",
   "author": {
     "name": "Jesse Vincent",
     "email": "jesse@fsck.com",
@@ -24,8 +24,8 @@
   "hooks": {},
   "interface": {
     "displayName": "Superpowers",
-    "shortDescription": "Planning, TDD, debugging, and delivery workflows for coding agents",
-    "longDescription": "Use Superpowers to guide agent work through brainstorming, implementation planning, test-driven development, systematic debugging, parallel execution, code review, and finish-the-branch workflows.",
+    "shortDescription": "Design guidance with optional execution methods for coding agents",
+    "longDescription": "Use Superpowers for design approval before native implementation. Full planning, TDD, and agent execution methods remain available on request, with situational debugging, review, and delivery skills.",
     "developerName": "Jesse Vincent",
     "category": "Developer Tools",
     "capabilities": [

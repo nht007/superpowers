@@ -23,12 +23,15 @@ design and applicable user and repository instructions.
 The five full execution methods remain installed and discoverable:
 `writing-plans`, `executing-plans`, `test-driven-development`,
 `subagent-driven-development`, and `dispatching-parallel-agents`. Their trigger
-descriptions require an explicit user request for that method. An agent can
-still choose ordinary planning, tests, and delegation natively; the request
-condition selects the named Superpowers method, not the underlying activity.
+descriptions require an explicit user request for that method in ordinary
+feature development. An agent can still choose ordinary planning, tests, and
+delegation natively; the request condition selects the named Superpowers
+method, not the underlying activity.
 When a method is requested, its own workflow applies, subject to higher-priority
 instructions. Situational skills such as debugging, review, worktrees, and
 verification remain available when their actual trigger applies.
+`systematic-debugging` invokes the full TDD method at its failing-test step;
+that root-cause workflow keeps its current testing discipline.
 
 ## Behavior and Boundary
 
@@ -40,10 +43,11 @@ also asks for `writing-plans` or another named execution method, the agent uses
 that method at the appropriate point after the design gate.
 
 For a debugging request with no new behavior to design, the agent may use
-`systematic-debugging`. For an explicit request to use TDD or subagent-driven
-development, the corresponding method remains available. The bootstrap does
-not force every possibly relevant skill into the workflow. User and repository
-requirements for tests, reviews, and Git integration remain binding.
+`systematic-debugging`, including its full TDD step. For an explicit request
+to use TDD or subagent-driven development during feature work, the
+corresponding method remains available. The bootstrap does not force every
+possibly relevant skill into the workflow. User and repository requirements
+for tests, reviews, and Git integration remain binding.
 
 ## Maintained Surfaces
 
