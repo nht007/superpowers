@@ -166,6 +166,21 @@ is the whole process.
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
 
+**Design versus implementation detail (bounded and architectural):**
+
+Before asking for design approval, check whether plausible mechanisms would
+materially differ in behavior, interaction with existing systems, cost, or
+maintained state. If they would, the design must explain the recommended
+mechanism from input or signal through state or transformation to result. Show
+one representative case, including its effect on relevant accepted behavior,
+and resolve consequential alternatives with your human partner. When the
+proposal adds behavior while preserving an accepted case, name the path or
+boundary that keeps the new behavior from changing that case; a promise to
+preserve it does not explain the mechanism. If the mechanism is unknown,
+investigate it or present it as an open design decision before seeking
+approval. Exact function names, task order, and low-impact tuning can wait
+until implementation.
+
 **Exploring approaches:**
 
 - Propose 2-3 different approaches with trade-offs
