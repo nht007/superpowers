@@ -42,8 +42,9 @@ for architectural work, then implements in the same conversation. If the user
 also asks for `writing-plans` or another named execution method, the agent uses
 that method at the appropriate point after the design gate.
 
-For a debugging request with no new behavior to design, the agent may use
-`systematic-debugging`, including its full TDD step. For an explicit request
+For a bug, failing test, or unexpected behavior, the bootstrap invokes
+`systematic-debugging` before investigation or a proposed fix. Its
+failing-test step invokes full TDD. For an explicit request
 to use TDD or subagent-driven development during feature work, the
 corresponding method remains available. The bootstrap does not force every
 possibly relevant skill into the workflow. User and repository requirements
@@ -57,6 +58,7 @@ for tests, reviews, and Git integration remain binding.
   current `main`, preserving the published mechanism-level design check.
 - Narrow only the trigger descriptions of the five execution-method skills.
   Their bodies remain intact for users who invoke them.
+- Make `systematic-debugging` explicitly invoke TDD at its failing-test step.
 - Update `NELA.md` and the existing version manifests for one shared release.
   No new package filter, fork, hook, or parallel implementation is needed.
 

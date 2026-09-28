@@ -26,6 +26,9 @@ your human partner explicitly requests the named method. They remain
 available; an ordinary request to implement or test does not select one.
 Use situational skills, including `systematic-debugging`, review,
 verification, and worktree skills, when their specific triggers apply.
+When you encounter a bug, failing test, or unexpected behavior in the work,
+invoke `superpowers:systematic-debugging` before investigating or proposing
+a fix.
 `systematic-debugging` invokes the full `test-driven-development` method
 when it reaches its failing-test step.
 
